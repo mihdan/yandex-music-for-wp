@@ -48,14 +48,24 @@ class Main {
 	public static function add_oembed_provider() {
 		foreach ( self::TEMPLATES as $template_key => $template ) {
 			wp_embed_register_handler(
-				$template_key . '_foo',
+				PLUGIN_SLUG . '_' . $template_key,
 				$template['format'],
 				[ __CLASS__, $template['callback'] ]
 			);
 		}
 	}
 
-	public static function album_track_callback( $matches, $attr, $url, $rawattr ) {
+	/**
+	 * Callback for track in album.
+	 *
+	 * @param array  $matches   YouTube embed output.
+	 * @param array  $attr    An array of embed attributes.
+	 * @param string $url     The original URL that was matched by the regex.
+	 * @param array  $rawattr The original unmodified attributes.
+	 *
+	 * @return string
+	 */
+	public static function album_track_callback( array $matches, array $attr, string $url, array $rawattr ): string {
 		$embed = sprintf(
 			self::TEMPLATES['album_track']['template'],
 			$matches[1],
